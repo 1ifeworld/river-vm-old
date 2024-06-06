@@ -1,17 +1,6 @@
 import { ed25519ph } from "@noble/curves/ed25519";
 import { blake3 } from '@noble/hashes/blake3';
 
-// CONSTANTS FOR TESTS
-
-
-// NOTE: this is an example eddsa key pair I generated using nobile curves lib
-// NOTE: messages are signed with eddsa key pairs a userId has registered in the key registry.
-//       they are NOT signed by the users custody address
-export const SIGNER_PRIV_KEY =
-  "6f50d6d344bcb854d409ffb8ce2c1e495f20aeb56c55add8b084ff339f14b039";
-export const SIGNER_PUB_KEY =
-  "f577faf0d7312c907067258833375a28805019e31eecb7df50c25dbcbc998bbc";
-
 /*
     official types + actions for river vm
     1. generics
@@ -53,12 +42,15 @@ export type CreateChannelBody = {
     uri: string
 }
 
-export type EditMembersBody = {
+
+// TODO: lets get rid of the array, and require separate messages
+//       to update each member. just a bit cleaner
+export type EditMemberBody = {
     channelId: string
-    members: {
+    member: {
         rid: bigint,
         role: 0 | 1 | 2 // 0 = none, 1 = member, 2 = admin
-    }[]
+    }
 }
 
 export type EditUriBody = {
@@ -155,6 +147,14 @@ export type SetUriBody = {
 }
 
 // EXAMPLES
+
+// NOTE: this is an example eddsa key pair I generated using nobile curves lib
+// NOTE: messages are signed with eddsa key pairs a userId has registered in the key registry.
+//       they are NOT signed by the users custody address
+export const SIGNER_PRIV_KEY =
+  "6f50d6d344bcb854d409ffb8ce2c1e495f20aeb56c55add8b084ff339f14b039";
+export const SIGNER_PUB_KEY =
+  "f577faf0d7312c907067258833375a28805019e31eecb7df50c25dbcbc998bbc";
 
 export function serializeToUint8Array(data: any): Uint8Array {
     // Stringify BigInt values to avoid loss of precision during JSON serialization
